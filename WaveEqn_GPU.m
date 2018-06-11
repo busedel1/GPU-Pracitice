@@ -65,8 +65,8 @@ WuxxT2 = repmat(x(ii)./(1-x(ii).^2).^(3/2),length(ii),1);
 WuyyT1 = repmat(1./(1-y(ii).^2),1,length(ii));
 WuyyT2 = repmat(y(ii)./(1-y(ii).^2).^(3/2),1,length(ii));
 
-uxx = parallel.gpu.GPUArray.zeros(N+1,N+1);
-uyy = parallel.gpu.GPUArray.zeros(N+1,N+1);
+uxx = gpuArray.zeros(N+1,N+1);
+uyy = gpuArray.zeros(N+1,N+1);
 
 % Converting variables to gpuArrays to get variables in GPU memory
 dt = gpuArray(dt);
