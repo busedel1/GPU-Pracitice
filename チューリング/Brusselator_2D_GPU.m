@@ -1,5 +1,5 @@
 %% 2D Coupled Brusselator model
-function u1g=Brusselator_2D_GPU(h,h2,hObject,hText,N,maxIter)
+function u1g=Brusselator_2D_GPU(h,hObject,hText,N,maxIter)
 
 if nargin <= 2
     guiMode = false;
@@ -7,7 +7,7 @@ if nargin <= 2
     if nargin == 1
         maxIter = 4000;
     else
-        maxIter = h2;
+        maxIter = hObject;
     end
 else
     guiMode = true;

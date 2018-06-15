@@ -1,5 +1,5 @@
 %% 2D Coupled Brusselator model
-function u1=Brusselator_2D_CPU(h,h2,hObject,hText,N,maxIter)
+function u1=Brusselator_2D_CPU(h,hObject,hText,N,maxIter)
 
 if nargin <= 2
     guiMode = false;
@@ -7,7 +7,7 @@ if nargin <= 2
     if nargin == 1
         maxIter = 4000;
     else
-        maxIter = h2;
+        maxIter = hObject;
     end
 else
     guiMode = true;
@@ -80,7 +80,7 @@ for t=1:maxIter
    if guiMode && mod(t,plotstep) == 0
       sh.ZData=u1;
       sh2.CData=u1;
-      caxis(h2, [a-1/2 a+1/2]);
+%       caxis(h2, [a-1/2 a+1/2]);
       set(hText,'String',num2str(t));
       drawnow
    end

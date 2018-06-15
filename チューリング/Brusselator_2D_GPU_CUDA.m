@@ -1,5 +1,5 @@
 %% 2D Coupled Brusselator model
-function u1=Brusselator_2D_CPU(h,h2,hObject,hText,N,maxIter)
+function u1=Brusselator_2D_CPU(h,hObject,hText,N,maxIter)
 
 if nargin <= 2
     guiMode = false;
@@ -7,7 +7,7 @@ if nargin <= 2
     if nargin == 1
         maxIter = 4000;
     else
-        maxIter = h2;
+        maxIter = hObject;
     end
 else
     guiMode = true;
@@ -17,8 +17,8 @@ end
 
 % CUDA
 kernel=parallel.gpu.CUDAKernel('Brusselator_2D.ptx','Brusselator_2D.cu');
-kernel.GridSize=[8 8];
-kernel.ThreadBlockSize=[16 16 1]; 
+kernel.GridSize=[16 16];
+kernel.ThreadBlockSize=[int64(N/16) int64(N/16) 1]; 
 
 L=32;
 dt=1e-3;
@@ -63,7 +63,7 @@ for t=1:maxIter
       u1g=gather(u1);
       sh.ZData=u1g;
       sh2.CData=u1g;
-      caxis(h2, [a-1/2 a+1/2]);
+%       caxis(h2, [a-1/2 a+1/2]);
       set(hText,'String',num2str(t));
       drawnow
    end

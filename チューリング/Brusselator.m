@@ -61,6 +61,7 @@ handles.gridSizeValue = str2double(get(handles.gridSizeEdit, 'String'));
 
 % handlesを更新
 guidata(hObject, handles);
+movegui(hObject, 'center');
 %画面中央に表示
 % movegui(hObject, 'center');
 
@@ -89,16 +90,45 @@ button_state = get(hObject,'Value');
 
 %関数ハンドルをfhに格納
 % fh = @Brusselator_2D_CPU;
-fh1 = @Brusselator_2D_CPU;
-fh2 = @Brusselator_2D_GPU;
-fh3 = @Brusselator_2D_GPU_CUDA;
+% fh1 = @Brusselator_2D_CPU;
+% fh2 = @Brusselator_2D_GPU;
+% fh3 = @Brusselator_2D_GPU_CUDA;
+
+%CPU,GPU,GPU with button の選択
+if get(handles.CPU_button,'Value') == 1
+   fh = @Brusselator_2D_CPU;
+   
+elseif get(handles.GPU_button,'Value') == 1
+   try
+      gpuDeviceCount;
+   catch ME
+      errordlg({['Supported GPU hardware not found. ', ...
+         'Check the documentation to see what''s supported.'], '', ...
+         ME.message}, 'Error', 'modal');
+      set(hObject,'Value',get(hObject,'Min'));
+      return;
+   end
+   fh = @Brusselator_2D_GPU;
+   
+else
+   try
+      gpuDeviceCount;
+   catch ME
+      errordlg({['Supported GPU hardware not found. ', ...
+         'Check the documentation to see what''s supported.'], '', ...
+         ME.message}, 'Error', 'modal');
+      set(hObject,'Value',get(hObject,'Min'));
+      return;
+   end
+   fh = @Brusselator_2D_GPU_CUDA;
+end
 
 %Startプッシュボタンが押されると開始
 if button_state == get(hObject,'Max')
    set(hObject,'String', 'Stop')
    t = tic;
 %    set(handles.ElapsedTimeText, 'String', 'Elapsed Time:');
-   fh3(handles.axes1,handles.axes2,hObject,handles.iteration,handles.gridSizeValue,handles.maxIterValue);
+   fh(handles.axes1,hObject,handles.iteration,handles.gridSizeValue,handles.maxIterValue);
    set(handles.ElapsedTimeText, 'String', sprintf('%0.1f sec', toc(t)));
    set(hObject,'Value', get(hObject,'Min'), 'String', 'Start')
 else
@@ -110,8 +140,14 @@ function gridSizeEdit_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-%テスト
+%グリッド数の入力値をとる
 val = str2double(get(hObject,'String'));
+if isnan(val)
+   set(hObject, 'String', handles.gridSizeValue)
+else
+   handles.gridSizeValue = val;
+   guidata(hObject, handles);
+end
 % if isnan(val)
 %    set(hObject, 'String', handles.gridSizeValue)
 % else
