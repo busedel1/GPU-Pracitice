@@ -24,7 +24,7 @@ function varargout = WaveEqnGUI(varargin)
 
 % Edit the above text to modify the response to help WaveEqnGUI
 
-% Last Modified by GUIDE v2.5 05-May-2011 09:58:01
+% Last Modified by GUIDE v2.5 13-Jun-2018 14:45:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -175,3 +175,10 @@ function maxIterEdit_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
    set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function text1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called

@@ -1,5 +1,5 @@
 %% 2D Coupled Brusselator model
-function u1=Brusselator_2D_CPU(h,hObject,hText,N,maxIter)
+function u1g=Brusselator_2D_GPU(h,h2,hObject,hText,N,maxIter)
 
 if nargin <= 2
     guiMode = false;
@@ -17,12 +17,11 @@ end
 
 L=32;
 dt=1e-3;
-h=L/(N-1);
-D=dt/(h*h);
+hxy=L/(N-1);
+D=dt/(hxy*hxy);
 
 %model param
 a=4; b=12; eta=1;
-eps_on=2.0;
 d_1 = 0.37;
 % du,v transform
 d_u1=d_1; d_v1=1.0;
@@ -30,24 +29,36 @@ d_u1=d_1; d_v1=1.0;
 %initial value
 u1=a+1*(2*rand(N,N)-1);
 v1=b/a+1*(2*rand(N,N)-1);
-t=1;
-tic;
 
 if guiMode
     
     plotstep=10;
-%     [xxx,yyy] = meshgrid(0:L,0:L); % grid for plotting
-%     sh  = surf(h , xxx, yyy, zeros(size(xxx)));
-%     axis(h , [0 L 0 L 2 6]);
-%     caxis(h, [2 6]);
-    pcolor(u1)
-%     plotWave(sh,sh2,xx,yy,u1,xxx,yyy)
+    [xxx,yyy] = meshgrid(0:hxy:L,0:hxy:L); % grid for plotting
+    sh= surf(h,xxx,yyy,u1);
+    hold(h,'on')
+    sh2= imagesc(h,xxx(1,:),yyy(:,1),u1);
+    sh.ZData=u1;
+    sh2.CData=u1;
     set(hText, 'String', '0');
     
 end
 
+%gpu‚É•Ï”‚ðŠi”[
+dt=gpuArray(dt);
+eta=gpuArray(eta);
+a=gpuArray(a);
+b=gpuArray(b);
+d_u1=gpuArray(d_u1);
+d_v1=gpuArray(d_v1);
+u1=gpuArray(u1);
+v1=gpuArray(v1);
+
 for t=1:maxIter
     
+    if guiMode && ~isequal(get(hObject, 'Value'), on_state)
+      break;
+    end
+   
     uu1c=u1;
     vv1c=v1;
     
@@ -75,14 +86,15 @@ for t=1:maxIter
     
      % plot every plotstep iterations
    if guiMode && mod(t,plotstep) == 0
-       pcolor(u1)
-%       plotWave(sh,sh2,xx,yy,vv,vvold,xxx,yyy)
+      u1g=gather(u1);
+      sh.ZData=u1g;
+      sh2.CData=u1g;
+%       caxis(h2, [a-1/2 a+1/2]);
       set(hText,'String',num2str(t));
-%        colorbar;
-       caxis([3.5,4.5]);
       drawnow
    end
-   
 end
+u1g=gather(u1);
+
 
 

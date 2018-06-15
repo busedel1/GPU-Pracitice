@@ -15,6 +15,11 @@ else
     on_state = get(hObject,'Max');
 end
 
+% CUDA
+kernel=parallel.gpu.CUDAKernel('Brusselator_2D.ptx','Brusselator_2D.cu');
+kernel.GridSize=[8 8];
+kernel.ThreadBlockSize=[16 16 1]; 
+
 L=32;
 dt=1e-3;
 hxy=L/(N-1);
@@ -50,36 +55,14 @@ for t=1:maxIter
     if guiMode && ~isequal(get(hObject, 'Value'), on_state)
       break;
     end
-   
-    uu1c=u1;
-    vv1c=v1;
     
-    %lap
-    uu1r_x=[uu1c(:,N) uu1c(:,1:N-1)];
-    uu1l_x=[uu1c(:,2:N) uu1c(:,1) ];
-    uu1u_y=[uu1c(N,:) ; uu1c(1:N-1,:)];
-    uu1d_y=[uu1c(2:N,:) ; uu1c(1,:) ];
-    lap_Du1=(uu1r_x+uu1l_x+uu1u_y+uu1d_y-4*uu1c);
-    
-    vv1r_x=[vv1c(:,N) vv1c(:,1:N-1)];
-    vv1l_x=[vv1c(:,2:N) vv1c(:,1) ];
-    vv1u_y=[vv1c(N,:) ; vv1c(1:N-1,:)];
-    vv1d_y=[vv1c(2:N,:) ; vv1c(1,:) ];
-    lap_Dv1=(vv1r_x+vv1l_x+vv1u_y+vv1d_y-4*vv1c);
-    
-    %main calc
-    u1= uu1c...
-        +dt*( eta*( a-(b+1.0)*uu1c + uu1c.*uu1c.*vv1c ) )...
-        +d_u1*D*lap_Du1;
-    
-    v1= vv1c...
-        +dt*( eta*( b*uu1c - uu1c.*uu1c.*vv1c ) )...
-        +d_v1*D*lap_Dv1;
+    [u1,v1]=feval(kernel,u1,v1,a,b,eta,d_u1,d_v1,dt,D,N);
     
      % plot every plotstep iterations
    if guiMode && mod(t,plotstep) == 0
-      sh.ZData=u1;
-      sh2.CData=u1;
+      u1g=gather(u1);
+      sh.ZData=u1g;
+      sh2.CData=u1g;
       caxis(h2, [a-1/2 a+1/2]);
       set(hText,'String',num2str(t));
       drawnow

@@ -22,7 +22,7 @@ function varargout = Brusselator(varargin)
 
 % Edit the above text to modify the response to help Brusselator
 
-% Last Modified by GUIDE v2.5 12-Jun-2018 20:18:18
+% Last Modified by GUIDE v2.5 13-Jun-2018 15:37:40
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -62,7 +62,7 @@ handles.gridSizeValue = str2double(get(handles.gridSizeEdit, 'String'));
 % handlesを更新
 guidata(hObject, handles);
 %画面中央に表示
-movegui(hObject, 'center');
+% movegui(hObject, 'center');
 
 % UIWAIT makes Brusselator wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -84,19 +84,22 @@ function Startbutton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-%Startプッシュボタンが押されているかどうか
+%Startプッシュボタンが押されているかどうかの情報を取得
 button_state = get(hObject,'Value');
 
 %関数ハンドルをfhに格納
-fh = @Brusselator_2D_CPU;
+% fh = @Brusselator_2D_CPU;
+fh1 = @Brusselator_2D_CPU;
+fh2 = @Brusselator_2D_GPU;
+fh3 = @Brusselator_2D_GPU_CUDA;
 
 %Startプッシュボタンが押されると開始
 if button_state == get(hObject,'Max')
    set(hObject,'String', 'Stop')
    t = tic;
 %    set(handles.ElapsedTimeText, 'String', 'Elapsed Time:');
-   fh(handles.axes1,hObject,handles.text3,handles.gridSizeValue,handles.maxIterValue);
-%    set(handles.ElapsedTimeText, 'String', sprintf('Elapsed Time:\n%0.1f sec', toc(t)));
+   fh3(handles.axes1,handles.axes2,hObject,handles.iteration,handles.gridSizeValue,handles.maxIterValue);
+   set(handles.ElapsedTimeText, 'String', sprintf('%0.1f sec', toc(t)));
    set(hObject,'Value', get(hObject,'Min'), 'String', 'Start')
 else
    set(hObject,'String', 'Start')
@@ -160,3 +163,56 @@ function maxIterEdit_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function iteration_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to iteration (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+% if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+%     set(hObject,'BackgroundColor','white');
+% end
+
+
+% --- Executes on button press in CPU_button.
+function CPU_button_Callback(hObject, eventdata, handles)
+% hObject    handle to CPU_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of CPU_button
+
+
+% --- Executes on slider movement.
+function slider1_Callback(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in GPU_button.
+function GPU_button_Callback(hObject, eventdata, handles)
+% hObject    handle to GPU_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of GPU_button
