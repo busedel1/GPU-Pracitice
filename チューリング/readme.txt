@@ -1,17 +1,6 @@
-2nd order Wave Equation Demo
+GUIãƒ™ãƒ¼ã‚¹ã®ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢
+Brusselator modelã‚’è§£ã
 
-‚±‚Ìƒfƒ‚‚Í‚QŽŸ‚Ì”g“®•û’öŽ®‚ð CPU ‚Ü‚½‚Í GPU ã‚ÅŒvŽZ‚µ‚Ü‚·B
-‚±‚Ìƒfƒ‚‚ÍuParallel Computing Toolboxv‚¨‚æ‚ÑƒTƒ|[ƒg‘ÎÛ GPU ƒJ[ƒh‚ð—v‹‚¢‚½‚µ‚Ü‚·
+å¿…è¦ï¼š
+matlabã®ã€ŒParallel Computing Toolboxã€ã¨ GPU ã‚«ãƒ¼ãƒ‰
 
-GUI:
-* "WaveEqnGUI.m" ‚ðŽÀs 
-* "CPU" ‚Ü‚½‚Í "GPU" ‚ð‘I‘ð
-* ƒOƒŠƒbƒhEƒTƒCƒY‚Ì“ü—ÍBƒTƒCƒY‚ª‘å‚«‚¢‚Ù‚ÇŒvŽZŽžŠÔ‚ð—v‚µ‚Ü‚·B
-* "Start" ‚ðƒNƒŠƒbƒN
-* ã‚ÌƒOƒ‰ƒt‚Í”g“®•û’öŽ®‚Ì‰ð‚ð•\‚µA‰º‚ÌƒOƒ‰ƒt‚Í‚PŠú‘O‚Æ‚Ì·•ª‚ð•\‚µ‚Ü‚·B
-* WaveEqn_CPU.m ‚Æ WaveEqn_GPU.m ‚Æ‚ÌƒAƒ‹ƒSƒŠƒYƒ€‚ð”äŠr‚µ‚Ä‚Ý‚Ü‚µ‚å‚¤B
-
-Script:
-* "WaveScript.m" ‚ðŠJ‚¢‚Ä‚PƒXƒeƒbƒv‚²‚Æ‚ÉƒZƒ‹ƒ‚[ƒhŽÀs‚µ‚Ä‚Ý‚Ü‚µ‚å‚¤B
-
-Copyright 2011 The MathWorks, Inc.
